@@ -1,5 +1,3 @@
-let lodash = require('lodash')
-
 const dummy = (string) => {
     return 1;
 }
@@ -32,7 +30,6 @@ const mostBlogs = (listOfBlogs) => {
         authorCount[blog.author] = (authorCount[blog.author] || 0) + 1
         return authorCount
     }, {})
-    console.log(authorCounts)
     let maxCount = Math.max(...Object.values(authorCounts)) // 3
     const filterAuthor = Object.keys(authorCounts).filter((author => authorCounts[author] === maxCount))
     return {
