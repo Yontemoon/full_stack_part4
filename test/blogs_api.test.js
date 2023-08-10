@@ -8,6 +8,7 @@ const helper = require('./test_helper');
 
 
 
+
 beforeEach(async () => {
 //  await Blog.deleteMany({})
 //  const blogObjects = helper.initialBlog.map(blog => new Blog(blog))
@@ -15,13 +16,14 @@ beforeEach(async () => {
 //  await Promise.all(promiseArray)
 
 await Blog.deleteMany({});
-let blogObject = new Blog(helper.initialBlog[0])
-await blogObject.save()
-blogObject = new Blog(helper.initialBlog[1])
-await blogObject.save()
-blogObject = new Blog(helper.initialBlog[2])
-await blogObject.save()
-}, 100000)
+await Blog.insertMany(helper.initialBlog)
+// let blogObject = new Blog(helper.initialBlog[0])
+// await blogObject.save()
+// blogObject = new Blog(helper.initialBlog[1])
+// await blogObject.save()
+// blogObject = new Blog(helper.initialBlog[2])
+// await blogObject.save()
+})
 
 test("Blogs are returned as a JSON", async () => {
     await api
@@ -83,4 +85,38 @@ test("Verifies if the title or url are missing, a status code 400 Bad Request is
     }
 
     await api.post("/api/blogs").send(newBlog).expect(400)
+})
+
+test("test to make sure a blogpost get deleted correctly", async () => {
+    const startingBlogs = await helper.blogsInDb()
+    const removedBlog = startingBlogs[0]
+    await api.delete(`/api/blogs/${removedBlog._id}`).expect(204)
+
+    const endingBlogs = await helper.blogsInDb();
+    expect(endingBlogs).toHaveLength(helper.initialBlog.length - 1)
+
+    const allContent = endingBlogs.map(blog => blog.title);
+    expect(allContent).not.toContain(removedBlog.title)
+})
+
+test("Replaces an existing blog with a new one", async () => {
+    const startingBlogs = await helper.blogsInDb()
+    const replacedBlog = startingBlogs[0]
+
+    const newBlog = {
+        title: "New Post",
+        author: "Yonte Moon",
+        url: "NEWURL",
+        likes: 69
+    }
+    await api
+        .put(`/api/blogs/${replacedBlog._id}`)
+        .send(newBlog)
+        .expect(200)
+    
+    const endingBlogs = await helper.blogsInDb();
+    expect(endingBlogs).toHaveLength(startingBlogs.length)
+
+    const allContent = endingBlogs.map(blog => blog.title);
+    expect(allContent).toContain("New Post")
 })
