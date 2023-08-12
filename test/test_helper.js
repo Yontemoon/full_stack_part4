@@ -1,4 +1,5 @@
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 const initialBlog = [
     {
@@ -21,12 +22,32 @@ const initialBlog = [
         },
 ]
 
+const initialUser = [
+    {
+        username: "MonteQ",
+        name: "Monte Yoon",
+    },
+    {
+        username: "MonteQ2",
+        name: "Monte Yoon",
+    },
+    {
+        username: "MonteQ3",
+        name: "Monte Yoon",
+    }
+]
+
 //COMPARE WHAT IS JSON VS OBJECT LOOKS LIKE...
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
 }
 
+const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(user => user.toJSON())
+}
+
 module.exports = {
-    initialBlog, blogsInDb
+    initialBlog, initialUser, blogsInDb, usersInDb
 }
