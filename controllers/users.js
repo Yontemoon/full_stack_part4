@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-// const { response } = require('../app');
 const usersRouter = require('express').Router();
 
 usersRouter.post("/", async (request, response) => {

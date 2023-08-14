@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         minLength: 3,
         required: true
     },
-    passwordHash: {
+    passwordHash: { //FOR SOME REASON, PUT IN "PASSWORD" INSTEAD OF PASSWORDHASH...
         type: String,
         // required: true,
     },
@@ -35,6 +35,6 @@ userSchema.set("toJSON", {
 })
 userSchema.plugin(uniqueValidator)
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
-// module.exports = User
+module.exports = User
