@@ -10,9 +10,14 @@ const mongoose = require('mongoose');
 const usersRouter = require("./controllers/users")
 const loginRouter = require("./controllers/login")
 
+if(process.env.NODE_ENV === 'test') {
+    const testingRouter = require('./controllers/testing')
+    app.use('/api/testing', testingRouter)
+}
+
 mongoose.set('strictQuery', false)
 mongoose.connect(config.MONGODB_URI)
-    .then(() => {
+    .then(() => {t
         logger.info('connected to MongoDB');
     })
     .catch((error) => {
@@ -28,5 +33,7 @@ app.use(middleware.tokenExtractor)
 app.use("/api/blogs", blogRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
+
+
 
 module.exports = app;
